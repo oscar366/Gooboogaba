@@ -260,19 +260,22 @@ makeMoveable();
 3:info
 4:reshow
 */
-  function Message(Type, newContent, newTitle) {
-	  //Dont forget let and classes not id:)
-  let errorBox = document.getElementById('errorBox')
-	  //just copy id names
-  let content = document.getElementsByClassName('padding')
-	  if (Type == 0) {
-		errorBox.setAttribute('style', 'display: none;')
-	  } else if (Type == 1) {
-		errorBox.setAttribute('style', 'display: block;')
-		content.innerHTML =  newContent
-		document.getElementByClassName("error-header").innerHTML = newTitle
-	  }
+function Message(Type, newContent, newTitle) {
+  let errorBox = document.getElementById('errorBox');
+  
+  // Just target the first element with the padding class
+  let content = document.querySelector('.padding'); 
+
+  if (Type == 0) {
+    errorBox.style.display = 'none';
+  } else if (Type == 1) {
+    errorBox.style.display = 'block';
+    content.innerHTML = newContent; // Set the content inside the error box
+    // Update the error title
+    document.querySelector(".error-header").innerHTML = newTitle;
   }
+}
+
   </script>
 </body>
 </html>
