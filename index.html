@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+ <html>
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .window {
+      position: absolute;
+      border: 2px solid black;
+      width: 250px;
+      height: 200px;
+      background-color: white;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .window-header, .error-header {
+      background-color: #f2faee ;
+      border-bottom: 1px solid #aaa;
+      padding: 5px;
+      cursor: move;
+	  color: black;
+    }
+
+	.error-header {
+		background-color: #0D0511;
+		color: white;
+		cursor: auto;
+	    border-bottom: 1px solid #555;
+	}
+    .content {
+      padding: 10px;
+    }
+
+    button {
+      float: right;
+    }
+	
+	.errorBox {
+	width: 150px;
+	hight: 100px;
+	border: 2px solid white;
+	z-index: 4;
+	left: 574px; top: 249px;
+	position: absolute;
+	filter: invert(1);
+	mix-blend-mode: difference;
+	background-color: black;
+	color: white;
+	}
+	
+	.padding {
+		padding: 10px
+	}
+	
+	.resize-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+  background: #ccc;
+}
+  </style>
+</head>
+<body>
+  <div id="desktop">
+  <button onclick="createWindow(`New Window ${numOfWin}`,'Content')">New Window --</button>
+	<button onclick="Message('1','Error','Error')">New error</button>
+
+  <div id="windows">
+	<div class="errorBox" id="errorBox">
+	<div class="error-header">
+	<button onclick="Message(0, 'null', 'null')">x</button>
+	Error
+	</div>
+	<div class="padding">
+	<span> <span class="block-line"><span><span style="color:#9400D3">b</span><span style="color:#4B0082">a</span><span style="color:#0000FF">n</span><span style="color:#00FF00">a</span><span style="color:#FFFF00">n</span><span style="color:#FF7F00">a</span></span></span></span>
+	</div>
+	</div>
+  
+    <div class="window" data-number="1" style="left: 50px; top: 50px;">
+      <div class="window-header">
+        <button onclick="closeWindow('1')">x</button>
+        Window 1
+      </div>
+      <div class="content">
+        <span>This is window 1</span>
+      </div>
+	    <div class="resize-handle"></div>
+    </div>
+
+    <div class="window" data-number="2" style="left: 350px; top: 100px;">
+      <div class="window-header">
+        <button onclick="closeWindow('2')">x</button>
+        Window 2
+      </div>
+      <div class="content">
+        <span>This is window 2</span>
+      </div>
+	    <div class="resize-handle"></div>
+    </div>
+  </div>
+
+  <script>
+let numOfWin = 2
+
+//cloce windows
+    function closeWindow(number) {
+      const windowElement = document.querySelector(`.window[data-number="${number}"]`);
+      if (windowElement) {
+		numOfWin -= 1;
+        windowElement.remove();
+      }
+    }
+
+    // Make all windows draggable and resizeable
+function makeMoveable() {
+  const headers = document.querySelectorAll('.window-header');
+  const resizeHandles = document.querySelectorAll('.resize-handle');
+
+  // DRAGGING
+  headers.forEach(header => {
+    let offsetX = 0;
+    let offsetY = 0;
+    let isDragging = false;
+    let currentWindow = null;
+
+    header.addEventListener('mousedown', (e) => {
+      currentWindow = header.parentElement;
+      isDragging = true;
+
+      const rect = currentWindow.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+	/*Z-index table:
+	0:background
+	1:Icons
+	2:?
+	3:windows
+	4:fullscreen windows
+	*/
+      currentWindow.style.zIndex = 3;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging || !currentWindow) return;
+
+      const windowWidth = currentWindow.offsetWidth;
+      const windowHeight = currentWindow.offsetHeight;
+
+      // Calculate the new position
+      let newX = e.clientX - offsetX;
+      let newY = e.clientY - offsetY;
+
+      // Prevent the window from going out of bounds
+      const maxX = window.innerWidth - windowWidth;
+      const maxY = window.innerHeight - windowHeight;
+
+      // Constrain the window to the screen boundaries
+      newX = Math.max(0, Math.min(newX, maxX));
+      newY = Math.max(0, Math.min(newY, maxY));
+
+      currentWindow.style.left = `${newX}px`;
+      currentWindow.style.top = `${newY}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      currentWindow = null;
+    });
+  });
+
+  // RESIZING
+  resizeHandles.forEach(handle => {
+    let isResizing = false;
+    let currentWindow = null;
+    let startX, startY, startWidth, startHeight;
+
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault(); // Prevent text selection
+      currentWindow = handle.parentElement;
+      isResizing = true;
+
+      const rect = currentWindow.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = rect.width;
+      startHeight = rect.height;
+
+      currentWindow.style.zIndex = 3;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing || !currentWindow) return;
+
+      let newWidth = startWidth + (e.clientX - startX);
+      let newHeight = startHeight + (e.clientY - startY);
+
+      // Prevent window from going below a minimum size
+      newWidth = Math.max(100, newWidth); // Min width 100px
+      newHeight = Math.max(100, newHeight); // Min height 100px
+
+      // Prevent resizing the window out of the viewport
+      const maxWidth = window.innerWidth - currentWindow.offsetLeft;
+      const maxHeight = window.innerHeight - currentWindow.offsetTop;
+
+      newWidth = Math.min(newWidth, maxWidth);
+      newHeight = Math.min(newHeight, maxHeight);
+
+      currentWindow.style.width = `${newWidth}px`;
+      currentWindow.style.height = `${newHeight}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isResizing = false;
+      currentWindow = null;
+    });
+  });
+}
+
+makeMoveable();
+//End of  make all windows draggable and resizeable
+
+
+	
+	
+	//Create windows
+	function createWindow(Title, Content) {
+		//increse the num of windows
+		numOfWin += 1;
+		//get the windows div
+		let windowsDiv = document.getElementById('windows')
+		//create and add content to the new window
+		let newWindow = document.createElement('div');
+		newWindow.innerHTML =  `
+     <div class="window-header">
+        <button onclick="closeWindow('${numOfWin}')">x</button>
+        ${Title}
+      </div>
+      <div class="content">
+        ${Content}
+      </div>
+	<div class="resize-handle"></div>  
+   `
+	//add other thigs (class, number, etc...)
+	newWindow.setAttribute("class","window");
+	newWindow.setAttribute("data-number", numOfWin);
+	newWindow.setAttribute("style","left: 50px; top: 50px;");
+	windowsDiv.appendChild(newWindow);
+	makeMoveable();
+  }
+/*
+0:remove
+1:error
+2:warning
+3:info
+4:reshow
+*/
+  function Message(Type, newContent, newTitle) {
+	  //Dont forget let and classes not id:)
+  let errorBox = document.getElementById('errorBox')
+	  //just copy id names
+  let content = document.getElementsByClassName('padding')
+	  if (Type == 0) {
+		errorBox.setAttribute('style', 'display: none;')
+	  } else if (Type == 1) {
+		errorBox.setAttribute('style', 'display: block;')
+		content.innerHTML =  newContent
+		document.getElementById("error-header").innerHTML = newTitle
+	  }
+  }
+  </script>
+</body>
+</html>
+
