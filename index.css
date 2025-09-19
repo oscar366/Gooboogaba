@@ -32,9 +32,8 @@
 }
 
 .colorButton {
-/*Colors are inverted for error messages*/
-  background-color: black,
-  color: white;
+  background-color: white,
+  color: black;
   font-size: 16px;
   cursor: pointer;
   position: aboslute;
