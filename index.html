@@ -12,9 +12,9 @@
 	<div class="errorBox" id="errorBox">
   <div class="header">
     <div class="error-header">
+	<button onclick="Message(0, 'null', 'null')" class="colorButton">x</button>
       Error
     </div>
-    <button onclick="Message(0, 'null', 'null')" class="colorButton">x</button>
   </div>
   <div class="padding">
     <span class="block-line">
@@ -223,7 +223,7 @@ function Message(Type, newContent, newTitle) {
     errorBox.style.display = 'block'; // Show the error box
     content.innerHTML = newContent; // Set the content inside the padding
     // Update the error title
-    document.querySelector(".error-header").innerHTML = newTitle;
+    document.querySelector(".error-header").innerHTML = newTitle + `  <button onclick="Message(0, 'null', 'null')" class="colorButton">x</button>`;
   }
 }
 
