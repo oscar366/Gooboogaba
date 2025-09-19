@@ -32,9 +32,12 @@
 }
 
 .colorButton {
+/*Colors are inverted for error messages*/
+  background-color: black,
   color: white;
   font-size: 16px;
   cursor: pointer;
+  position: aboslute;
 }
 	
 	.errorBox {
