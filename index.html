@@ -221,7 +221,7 @@ function Message(Type, newContent, newTitle) {
     errorBox.style.display = 'none'; // Hide the error box when Type is 0
   } else if (Type == 1) {
     errorBox.style.display = 'block'; // Show the error box
-    content.innerHTML = "<img src='Images/Error.png' style="width: 100; height: 100;"></img>" + newContent; // Set the content inside the padding
+    content.innerHTML = "<img src='Images/Error.png' style='width: 100; height: 100;'></img>" + newContent; // Set the content inside the padding
     // Update the error title
     document.querySelector(".error-header").innerHTML = newTitle + `  <button onclick="Message(0, 'null', 'null')" class="colorButton">x</button>`;
   }
