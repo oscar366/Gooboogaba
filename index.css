@@ -21,8 +21,8 @@
 }
 
 .error-header {
-  background-color: ##F2FAEE;
-  color: white;
+  background-color: #F2FAEE;
+  color: black;
   cursor: auto;
   border-bottom: 1px solid #AAA;
 }
@@ -42,11 +42,10 @@
 	.errorBox {
 	width: 150px;
 	hight: 100px;
-	border: 2px solid white;
+	border: 2px solid black;
 	z-index: 4;
 	left: 574px; top: 249px;
 	position: absolute;
-	mix-blend-mode: difference;
 	background-color: white;
 	color: black;
 	}
