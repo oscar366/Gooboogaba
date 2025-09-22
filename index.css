@@ -21,10 +21,10 @@
 }
 
 .error-header {
-  background-color: #0D0511;
+  background-color: ##F2FAEE;
   color: white;
   cursor: auto;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #AAA;
 }
 
 .content {
@@ -46,10 +46,9 @@
 	z-index: 4;
 	left: 574px; top: 249px;
 	position: absolute;
-	filter: invert(1);
 	mix-blend-mode: difference;
-	background-color: black;
-	color: white;
+	background-color: white;
+	color: black;
 	}
 	
 	.padding {
